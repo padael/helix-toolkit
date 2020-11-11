@@ -562,9 +562,10 @@ namespace HelixToolkit.Wpf
             var orthographicCamera = camera as OrthographicCamera;
             if (orthographicCamera != null)
             {
-                double xscale = 2.0 / orthographicCamera.Width;
+                var factor = 1000.0;
+                double xscale = 2.0 * factor / orthographicCamera.Width;
                 double yscale = xscale * aspectRatio;
-                double znear = orthographicCamera.NearPlaneDistance;
+                double znear = orthographicCamera.NearPlaneDistance * factor;
                 double zfar = orthographicCamera.FarPlaneDistance;
 
                 if (double.IsPositiveInfinity(zfar))
@@ -572,9 +573,9 @@ namespace HelixToolkit.Wpf
                     zfar = znear * 1e5;
                 }
 
-                double dzinv = 1.0 / (znear - zfar);
+                double dzinv = factor / (znear - zfar);
 
-                var m = new Matrix3D(xscale, 0, 0, 0, 0, yscale, 0, 0, 0, 0, dzinv, 0, 0, 0, znear * dzinv, 1);
+                var m = new Matrix3D(xscale, 0, 0, 0, 0, yscale, 0, 0, 0, 0, dzinv, 0, 0, 0, znear * dzinv, factor);
                 return m;
             }
 
